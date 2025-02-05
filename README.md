@@ -40,7 +40,7 @@ chmod +x setup.sh
 ### **4. Activate the Environment**
 After running the setup script, restart your terminal and run:
 ```sh
-conda activate freecad-stubs-env
+conda activate freecad-stubs-env && code .
 ```
 
 ---

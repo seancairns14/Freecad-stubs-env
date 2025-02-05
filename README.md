@@ -17,7 +17,7 @@ This repository provides scripts to set up a **Conda environment** for **FreeCAD
 
 ### **1. Clone the Repository**
 ```sh
-git clone https://github.com/yourusername/freecad-conda-setup.git
+git clone https://github.com/seanstrcairns/freecad-conda-setup.git
 cd freecad-conda-setup
 ```
 

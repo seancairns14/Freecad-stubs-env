@@ -173,4 +173,4 @@ dependencies:
       - freecad-stubs==1.0.18
       - packaging==24.2
       - qtpy==2.4.2
-prefix: C:\Anaconda\envs\freecad-rc
+

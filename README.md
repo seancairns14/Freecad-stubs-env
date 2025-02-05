@@ -42,7 +42,11 @@ After running the setup script, restart your terminal and run:
 ```sh
 conda activate freecad-stubs-env && code .
 ```
-
+### **5. Run FreeCAD**
+You can run freecad by running in the activated terminal:
+```sh
+FreeCAD
+```
 ---
 
 ## **Project Structure**

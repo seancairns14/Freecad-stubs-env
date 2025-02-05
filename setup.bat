@@ -1,18 +1,25 @@
 @echo off
 echo Running Conda environment setup...
 
+:: Get the path of the current script and adjust the path to the create_env.bat file
+set "CREATE_ENV_PATH=%~dp0create_env\create_env.bat"
+
 :: Check if the Conda environment already exists
 call conda env list | findstr /C:"freecad-stubs-env" >nul
 if %ERRORLEVEL% EQU 0 (
     echo Conda environment "freecad-stubs-env" already exists. Skipping creation.
 ) else (
-    echo Creating Conda environment...
-    call conda env create -f create_env\freecad-stubs-env.yml
+    echo Calling create_env.bat to create Conda environment...
+    call "%CREATE_ENV_PATH%"
     if %ERRORLEVEL% NEQ 0 (
         echo ERROR: Failed to create Conda environment.
         exit /b 1
     )
 )
+
+echo.
+echo Conda environment setup completed successfully!
+exit /b 0
 
 echo Activating Conda environment...
 call conda.bat activate freecad-stubs-env

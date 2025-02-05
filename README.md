@@ -31,7 +31,7 @@ Ensure **Anaconda** or **Miniconda** is installed.
 setup.bat
 ```
 
-#### **Linux/macOS (Bash)**
+#### **Linux/macOS (Bash)** (**UNTESTED**)
 ```sh
 chmod +x setup.sh
 ./setup.sh

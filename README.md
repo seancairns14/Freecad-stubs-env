@@ -98,8 +98,8 @@ Then, rerun the setup script.
 
 ### **VS Code FreeCAD Autocomplete Not Working?**
 Ensure VS Code uses the correct interpreter:
-1. Open Terminal and activate env ```sh conda activate freecad-stubs-env ```
-2. Open **VS Code** ```sh code . ```
+1. Open Terminal and activate env  ```conda activate freecad-stubs-env ```
+2. Open **VS Code**  ```code . ```
 3. Press **Ctrl+Shift+P**, search **"Python: Select Interpreter"**
 4. Choose **`freecad-stubs-env`**
 5. Restart VS Code

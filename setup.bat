@@ -1,4 +1,5 @@
 @echo off
+setlocal
 echo Running Conda environment setup...
 
 :: Get the path of the current script and adjust the path to the create_env.bat file
@@ -11,16 +12,14 @@ if %ERRORLEVEL% EQU 0 (
 ) else (
     echo Calling create_env.bat to create Conda environment...
     call "%CREATE_ENV_PATH%"
-    if %ERRORLEVEL% NEQ 0 (
+    if %ERRORLEVEL% GTR 1 (
         echo ERROR: Failed to create Conda environment.
         exit /b 1
     )
+    echo Conda environment created successfully.
 )
 
 echo.
-echo Conda environment setup completed successfully!
-exit /b 0
-
 echo Activating Conda environment...
 call conda.bat activate freecad-stubs-env
 if %ERRORLEVEL% NEQ 0 (
@@ -45,28 +44,29 @@ mkdir "%CONDA_PREFIX%\etc\conda\deactivate.d" 2>nul
 
 :: Create the activation script (overwrite if it exists)
 (
-echo @echo off
-echo set "FREECAD_LIB=%%CONDA_PREFIX%%\Library\lib"
-echo set "FREECAD_BIN=%%CONDA_PREFIX%%\Library\bin"
-echo set "FREECAD_MOD=%%CONDA_PREFIX%%\Library\Mod"
-echo set "FREECAD_SITE_PACKAGES=%%CONDA_PREFIX%%\Lib\site-packages"
-echo set "PYTHONPATH=%%FREECAD_LIB%%;%%FREECAD_BIN%%;%%FREECAD_MOD%%;%%FREECAD_SITE_PACKAGES%%;%%PYTHONPATH%%"
+    echo @echo off
+    echo set "FREECAD_LIB=%%CONDA_PREFIX%%\Library\lib"
+    echo set "FREECAD_BIN=%%CONDA_PREFIX%%\Library\bin"
+    echo set "FREECAD_MOD=%%CONDA_PREFIX%%\Library\Mod"
+    echo set "FREECAD_SITE_PACKAGES=%%CONDA_PREFIX%%\Lib\site-packages"
+    echo set "PYTHONPATH=%%FREECAD_LIB%%;%%FREECAD_BIN%%;%%FREECAD_MOD%%;%%FREECAD_SITE_PACKAGES%%;%%PYTHONPATH%%"
 ) > "%CONDA_PREFIX%\etc\conda\activate.d\freecad-rc.bat"
 
 :: Create the deactivation script (overwrite if it exists)
 (
-echo @echo off
-echo set "FREECAD_LIB="
-echo set "FREECAD_BIN="
-echo set "FREECAD_MOD="
-echo set "FREECAD_SITE_PACKAGES="
-echo set "PYTHONPATH="
+    echo @echo off
+    echo set "FREECAD_LIB="
+    echo set "FREECAD_BIN="
+    echo set "FREECAD_MOD="
+    echo set "FREECAD_SITE_PACKAGES="
+    echo set "PYTHONPATH="
 ) > "%CONDA_PREFIX%\etc\conda\deactivate.d\freecad-rc.bat"
 
 :: Deactivate the Conda environment at the end
 echo Deactivating Conda environment...
 call conda deactivate
 
+echo.
 echo Setup complete.
 echo Restart your terminal and run: conda activate freecad-stubs-env && code .
 

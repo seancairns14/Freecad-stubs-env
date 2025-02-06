@@ -1,12 +1,23 @@
 #!/bin/bash
 
+set -e  # Exit immediately if a command exits with a non-zero status
+
 echo "Running Conda environment setup..."
 
-# Get the path of the current script and adjust the path to the create_env.sh file
+# Ensure Conda is available
+if ! command -v conda &>/dev/null; then
+    echo "ERROR: Conda is not installed or not in PATH."
+    exit 1
+fi
+
+# Source Conda shell functions to ensure 'conda activate' works
+eval "$(conda info --base)/etc/profile.d/conda.sh"
+
+# Get the path of the current script and adjust the path to create_env.sh
 CREATE_ENV_PATH="$(dirname "$0")/create_env/create_env.sh"
 
 # Check if the Conda environment already exists
-if conda env list | grep -q "freecad-stubs-env"; then
+if conda env list | grep -q "^freecad-stubs-env\s"; then
     echo "Conda environment 'freecad-stubs-env' already exists. Skipping creation."
 else
     echo "Calling create_env.sh to create Conda environment..."
@@ -18,12 +29,9 @@ fi
 
 echo "Conda environment setup completed successfully!"
 
-# Activating Conda environment
+# Activate Conda environment
 echo "Activating Conda environment..."
-if ! conda activate freecad-stubs-env; then
-    echo "ERROR: Failed to activate Conda environment."
-    exit 1
-fi
+conda activate freecad-stubs-env
 
 # Short delay to ensure environment variables are available
 sleep 2
@@ -40,13 +48,16 @@ echo "Creating activation and deactivation scripts..."
 mkdir -p "$CONDA_PREFIX/etc/conda/activate.d"
 mkdir -p "$CONDA_PREFIX/etc/conda/deactivate.d"
 
+# Get Python version in the environment
+PYTHON_VERSION=$(python -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")')
+
 # Create the activation script (overwrite if it exists)
 cat << EOF > "$CONDA_PREFIX/etc/conda/activate.d/freecad-rc.sh"
 #!/bin/bash
-export FREECAD_LIB="\$CONDA_PREFIX/Library/lib"
-export FREECAD_BIN="\$CONDA_PREFIX/Library/bin"
-export FREECAD_MOD="\$CONDA_PREFIX/Library/Mod"
-export FREECAD_SITE_PACKAGES="\$CONDA_PREFIX/Lib/site-packages"
+export FREECAD_LIB="\$CONDA_PREFIX/lib"
+export FREECAD_BIN="\$CONDA_PREFIX/bin"
+export FREECAD_MOD="\$CONDA_PREFIX/Mod"
+export FREECAD_SITE_PACKAGES="\$CONDA_PREFIX/lib/python$PYTHON_VERSION/site-packages"
 export PYTHONPATH="\$FREECAD_LIB:\$FREECAD_BIN:\$FREECAD_MOD:\$FREECAD_SITE_PACKAGES:\$PYTHONPATH"
 EOF
 
@@ -59,6 +70,10 @@ unset FREECAD_MOD
 unset FREECAD_SITE_PACKAGES
 unset PYTHONPATH
 EOF
+
+# Make scripts executable
+chmod +x "$CONDA_PREFIX/etc/conda/activate.d/freecad-rc.sh"
+chmod +x "$CONDA_PREFIX/etc/conda/deactivate.d/freecad-rc.sh"
 
 # Deactivate the Conda environment at the end
 echo "Deactivating Conda environment..."
